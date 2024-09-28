@@ -1,280 +1,168 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
-import QtQuick 2.15
 import QtQuick.Dialogs 1.3
 
 Item {
     Rectangle {
-        id: home
         anchors.fill: parent
-        anchors.centerIn: parent
-        color: "purple"
+        color: "#f0f0f0"  // Light background for the main container
 
-        property var incomeArrays: ["Element 1", "Element 2", "Element 3"]
-        property var expenseArray: ["Element 1", "Element 2", "Element 3"]
-        property int incomeFieldsMargin: 5
         ColumnLayout {
-            anchors.centerIn: parent
             anchors.fill: parent
-            ColumnLayout {
-                anchors.left: parent.left
-                anchors.top: parent.top
-                anchors.margins: 20
+            spacing: 20
+            anchors.margins: 20
 
-                RowLayout {
-                    spacing: 20
+            RowLayout {
+                spacing: 10
+                anchors.fill: parent
 
-                    Button {
-                        text: qsTr("Add Income")
-                        onClicked: {
-                            var newElement = "Nowy element " + (home.incomeArrays.length + 1)
-                            home.incomeArrays.push(newElement)
-                            console.log(home.incomeArrays)
-                            listView.model = home.incomeArrays
-                        }
-                    }
+                // Left side: inputs
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    Layout.preferredWidth: parent.width * 0.5
+                    spacing: 10
 
-                    Button {
-                        text: qsTr("Remove Income")
-                        enabled: home.incomeArrays.length > 0
-                        onClicked: {
-                            home.incomeArrays.pop()
-                            console.log(home.incomeArrays)
-                            listView.model = home.incomeArrays
-                        }
-                    }
-                }
+                    // Age input
+                    Rectangle {
+                        color: "white" // Background set to white
+                        border.color: "gray"
+                        border.width: 1
+                        Layout.fillWidth: true
+                        height: 60
 
-                ListView {
-                    id: listView
-                    width: 950
-                    height: 150
-                    clip: true
+                        RowLayout {
+                            spacing: 10
+                            anchors.fill: parent
+                            anchors.margins: 10
 
-                    model: home.incomeArrays
+                            Text {
+                                text: qsTr("Your age:")
+                                font.bold: true
+                                Layout.alignment: Qt.AlignLeft
+                            }
 
-                    delegate: Item {
-                        width: listView.width
-                        height: 40
-                        Rectangle {
-                            width: parent.width
-                            height: parent.height
-                            color: focus ? "lightblue" : "lightgray"
-                            border.color: "black"
-                            border.width: 1
-                            RowLayout {
-                                anchors.fill: parent
-
-                                CheckBox {}
-
-                                // Cztery pary nazw i pól tekstowych
-                                RowLayout {
-                                    spacing: home.incomeFieldsMargin
-
-                                    Text {
-                                        text: "Name:"
-                                        verticalAlignment: Text.AlignVCenter
-                                    }
-                                    TextField {
-                                        placeholderText: ""
-                                    }
-                                }
-
-                                RowLayout {
-                                    spacing: home.incomeFieldsMargin
-
-                                    Text {
-                                        text: "Amount:"
-                                        verticalAlignment: Text.AlignVCenter
-                                    }
-                                    TextField {
-                                        placeholderText: ""
-                                        width: 30
-                                    }
-                                }
-
-                                RowLayout {
-                                    spacing: home.incomeFieldsMargin
-
-                                    Text {
-                                        text: "Tax:"
-                                        verticalAlignment: Text.AlignVCenter
-                                    }
-                                    TextField {
-                                        placeholderText: ""
-                                        width: 30
-                                    }
-                                }
-
-                                RowLayout {
-                                    spacing: home.incomeFieldsMargin
-
-                                    Text {
-                                        text: "Netto:"
-                                        verticalAlignment: Text.AlignVCenter
-                                    }
-                                    TextField {
-                                        placeholderText: ""
-                                        width: 30
-                                    }
+                            TextInput {
+                                width: 100
+                                text: qsTr("Enter age")
+                                color: "black"
+                                 Rectangle {
+                                    color: "white"
+                                    border.color: "gray"
+                                    border.width: 1
                                 }
                             }
                         }
                     }
-                }
 
-                Rectangle {
-                                    width: 200
-                                    height: 50
-                                    color: "lightgray"
+                    // Accumulated pension capital input
+                    Rectangle {
+                        color: "white" // Background set to white
+                        border.color: "gray"
+                        border.width: 1
+                        Layout.fillWidth: true
+                        height: 60
+
+                        RowLayout {
+                            spacing: 10
+                            anchors.fill: parent
+                            anchors.margins: 10
+
+                            Text {
+                                text: qsTr("Accumulated pension capital:")
+                                font.bold: true
+                                Layout.alignment: Qt.AlignLeft
+                            }
+
+                            TextInput {
+                                width: 200
+                                text: qsTr("Enter capital")
+                                color: "black"
+                                 Rectangle {
+                                    color: "white"
                                     border.color: "black"
                                     border.width: 1
-                                    anchors.right: parent.right
-                                    radius: 5  // Zaokrąglone rogi
-
-                                    Text {
-                                        text: "Sum of incomes: " + (home.incomeArrays.length)  // Możesz zmienić na konkretną logikę sumowania
-                                        anchors.right: parent.right
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        anchors.rightMargin: 10  // Odstęp od prawej krawędzi
-                                        horizontalAlignment: Text.AlignRight
-                                        color: "black"
-                                    }
                                 }
+                            }
+                        }
+                    }
 
-                ScrollBar.vertical: ScrollBar {
-                    policy: ScrollBar.AlwaysOn
+                    // Gender input
+                    Rectangle {
+                        color: "white" // Background set to white
+                        border.color: "gray"
+                        border.width: 1
+                        Layout.fillWidth: true
+                        height: 60
+
+                        RowLayout {
+                            spacing: 10
+                            anchors.fill: parent
+                            anchors.margins: 10
+
+
+                            Text {
+                                text: qsTr("Gender:")
+                                font.bold: true
+                                Layout.alignment: Qt.AlignLeft
+                            }
+
+
+
+
+                            Rectangle {
+                                        color: "lightblue" // Background set to light blue for the input
+                                        border.color: "gray"
+                                        border.width: 1
+                                        width: 100 // Adjust width as needed
+                                        height: parent.height // Match height of the outer rectangle
+
+                                        TextInput {
+                                            anchors.fill: parent // Make the TextInput fill the Rectangle
+                                            text: qsTr("Enter gender")
+                                            color: "black"
+
+                                        }
+                                    }
+                        }
+                    }
+                }
+
+                // Right side: calculate button and sum display
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    Layout.preferredWidth: parent.width * 0.5
+                    spacing: 10
+
+                    Button {
+                        text: "Calculate"
+                        Layout.alignment: Qt.AlignCenter
+                        Layout.preferredWidth: parent.width * 0.8
+                    }
+
+                    Rectangle {
+                        color: "white" // Background set to white
+                        border.color: "gray"
+                        border.width: 1
+                        Layout.fillWidth: true
+                        height: 50
+
+                        Text {
+                            text: qsTr("Suma: liczba")
+                            anchors.centerIn: parent
+                            font.bold: true
+                        }
+                    }
                 }
             }
 
-            ColumnLayout {
-                anchors.left: parent.left
-                anchors.margins: 20
-
-                RowLayout {
-                    spacing: 20
-
-                    Button {
-                        text: qsTr("Add Expense")
-                        onClicked: {
-                            var newElement = "Nowy element " + (home.expenseArray.length + 1)
-                            home.expenseArray.push(newElement)
-                            console.log(home.expenseArray)
-                            expensesListView.model = home.expenseArray
-                        }
-                    }
-
-                    Button {
-                        text: qsTr("Remove Expense")
-                        enabled: home.expenseArray.length > 0
-                        onClicked: {
-                            home.expenseArray.pop()
-                            console.log(home.expenseArray)
-                            expensesListView.model = home.expenseArray
-                        }
-                    }
-                }
-
-                ListView {
-                    id: expensesListView
-                    width: 770
-                    height: 150
-                    clip: true
-
-                    model: home.expenseArray
-
-                    delegate: Item {
-                        width: listView.width
-                        height: 40
-
-                        Rectangle {
-                            width: parent.width
-                            height: parent.height
-                            color: focus ? "lightblue" : "lightgray"
-                            border.color: "black"
-                            border.width: 1
-
-                            RowLayout {
-                                anchors.fill: parent
-
-                                CheckBox {}
-
-                                // Cztery pary nazw i pól tekstowych
-                                RowLayout {
-                                    spacing: home.incomeFieldsMargin
-
-                                    Text {
-                                        text: "Name:"
-                                        verticalAlignment: Text.AlignVCenter
-                                    }
-                                    TextField {
-                                        placeholderText: ""
-                                    }
-                                }
-
-                                RowLayout {
-                                    spacing: home.incomeFieldsMargin
-
-                                    Text {
-                                        text: "Amount:"
-                                        verticalAlignment: Text.AlignVCenter
-                                    }
-                                    TextField {
-                                        placeholderText: ""
-                                        width: 30
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                ScrollBar.vertical: ScrollBar {
-                    policy: ScrollBar.AlwaysOn
-                }
-            }
-
-            RowLayout{
-                anchors.right: parent.right
-                anchors.margins: 20
-                anchors.bottom: parent.bottom
-
             Rectangle {
-                                width: 200
-                                height: 50
-                                color: "lightgray"
-                                border.color: "black"
-                                border.width: 1
-                                radius: 5  // Zaokrąglone rogi
-
-                                Text {
-                                    text: "Sum of expenses: " + (home.incomeArrays.length)  // Możesz zmienić na konkretną logikę sumowania
-                                    anchors.right: parent.right
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    anchors.rightMargin: 10  // Odstęp od prawej krawędzi
-                                    horizontalAlignment: Text.AlignRight
-                                    color: "black"
-                                }
-                            }
-
-            Rectangle {
-                                width: 200
-                                height: 50
-                                color: "lightgray"
-                                border.color: "black"
-                                border.width: 1
-                                radius: 5  // Zaokrąglone rogi
-
-                                Text {
-                                    text: "Cash Flows: " + (home.incomeArrays.length)  // Możesz zmienić na konkretną logikę sumowania
-                                    anchors.right: parent.right
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    anchors.rightMargin: 10  // Odstęp od prawej krawędzi
-                                    horizontalAlignment: Text.AlignRight
-                                    color: "black"
-                                }
-                            }
+                color: "lightgray"
+                border.color: "gray"
+                border.width: 1
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.margins: 10
             }
         }
     }

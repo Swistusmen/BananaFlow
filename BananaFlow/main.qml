@@ -62,10 +62,9 @@ Window {
     Tab{
         title:qsTr("Retirement")
         width: viewTab.tabelementWidth
-        Rectangle{
+        RetirementElement{
             id: retirenmant
             anchors.fill: parent
-            color: "green"
         }
     }
 
