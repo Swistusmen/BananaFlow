@@ -1,0 +1,11 @@
+# ninja log v5
+0	11	1727522412278735309	BananaFlow_autogen/timestamp	1e45a3387ae74984
+0	11	1727522412278735309	BananaFlow_autogen/mocs_compilation.cpp	1e45a3387ae74984
+0	11	1727522412278735309	/home/michal/Documents/Programming/HackYeah/BananaFlow/build-BananaFlow-Desktop_Qt_5_15_2_GCC_64bit-Debug/BananaFlow_autogen/timestamp	1e45a3387ae74984
+0	11	1727522412278735309	/home/michal/Documents/Programming/HackYeah/BananaFlow/build-BananaFlow-Desktop_Qt_5_15_2_GCC_64bit-Debug/BananaFlow_autogen/mocs_compilation.cpp	1e45a3387ae74984
+11	14	1727522412283734980	BananaFlow_autogen/EWIEGA46WW/qrc_qml.cpp	e5b2749fd95bfb42
+11	14	1727522412283734980	/home/michal/Documents/Programming/HackYeah/BananaFlow/build-BananaFlow-Desktop_Qt_5_15_2_GCC_64bit-Debug/BananaFlow_autogen/EWIEGA46WW/qrc_qml.cpp	e5b2749fd95bfb42
+15	22	1727522412290734521	CMakeFiles/BananaFlow.dir/BananaFlow_autogen/mocs_compilation.cpp.o	63a4cc1b53d651fb
+15	35	1727522412304733601	CMakeFiles/BananaFlow.dir/BananaFlow_autogen/EWIEGA46WW/qrc_qml.cpp.o	7c65b1dcdf102803
+15	801	1727522413069683357	CMakeFiles/BananaFlow.dir/main.cpp.o	d05be3fbb03c6d5f
+801	1042	1727522413309667595	BananaFlow	6d04d7f342eeb395
