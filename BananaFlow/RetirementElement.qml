@@ -2,6 +2,8 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtQuick.Dialogs 1.3
+import QtCharts 2.3
+import QtQuick 2.15
 
 Item {
     Rectangle {
@@ -279,6 +281,57 @@ Item {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.margins: 10
+
+                ChartView {
+                                    id: chartView
+                                    anchors.fill: parent
+
+                                    LineSeries {
+                                        name: "Zmienna 1"
+                                        XYPoint { x: 0; y: 5 }
+                                        XYPoint { x: 1; y: 10 }
+                                        XYPoint { x: 2; y: 15 }
+                                        XYPoint { x: 3; y: 20 }
+                                        XYPoint { x: 4; y: 25 }
+                                    }
+
+                                    LineSeries {
+                                        name: "Zmienna 2"
+                                        XYPoint { x: 0; y: 10 }
+                                        XYPoint { x: 1; y: 15 }
+                                        XYPoint { x: 2; y: 20 }
+                                        XYPoint { x: 3; y: 10 }
+                                        XYPoint { x: 4; y: 5 }
+                                    }
+
+                                    LineSeries {
+                                        name: "Zmienna 3"
+                                        XYPoint { x: 0; y: 15 }
+                                        XYPoint { x: 1; y: 5 }
+                                        XYPoint { x: 2; y: 10 }
+                                        XYPoint { x: 3; y: 15 }
+                                        XYPoint { x: 4; y: 20 }
+                                    }
+
+                                    // Osie
+                                    ValueAxis {
+                                        id: axisX
+                                        min: 0
+                                        max: 4
+                                        titleText: "Oś X"
+                                    }
+
+                                    ValueAxis {
+                                        id: axisY
+                                        min: 0
+                                        max: 30
+                                        titleText: "Oś Y"
+                                    }
+
+                                    // Przypisanie osi do wykresu
+                                    axes: [axisX, axisY]
+                                }
+
             }
         }
     }

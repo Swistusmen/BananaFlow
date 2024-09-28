@@ -11,8 +11,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Gui Widgets Qml Quick Charts REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Gui Widgets Qml Quick Charts REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -45,7 +45,7 @@ endif()
 target_compile_definitions(BananaFlow
   PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 target_link_libraries(BananaFlow
-  PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
+  PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::Charts Qt${QT_VERSION_MAJOR}::Qml)
 
 set_target_properties(BananaFlow PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
