@@ -72,10 +72,9 @@ Window {
     Tab{
         title: qsTr("Financial Goals")
         width: viewTab.tabelementWidth
-        Rectangle{
+        FinancialGoals{
             id: financialGoals
             anchors.fill: parent
-            color: "green"
         }
     }
 

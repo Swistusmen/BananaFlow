@@ -134,7 +134,7 @@ Item {
                                     radius: 5  // Zaokrąglone rogi
 
                                     Text {
-                                        text: "Suma: " + (home.incomeArrays.length)  // Możesz zmienić na konkretną logikę sumowania
+                                        text: "Sum of incomes: " + (home.incomeArrays.length)  // Możesz zmienić na konkretną logikę sumowania
                                         anchors.right: parent.right
                                         anchors.verticalCenter: parent.verticalCenter
                                         anchors.rightMargin: 10  // Odstęp od prawej krawędzi
@@ -249,7 +249,7 @@ Item {
                                 radius: 5  // Zaokrąglone rogi
 
                                 Text {
-                                    text: "Suma: " + (home.incomeArrays.length)  // Możesz zmienić na konkretną logikę sumowania
+                                    text: "Sum of expenses: " + (home.incomeArrays.length)  // Możesz zmienić na konkretną logikę sumowania
                                     anchors.right: parent.right
                                     anchors.verticalCenter: parent.verticalCenter
                                     anchors.rightMargin: 10  // Odstęp od prawej krawędzi
@@ -267,7 +267,7 @@ Item {
                                 radius: 5  // Zaokrąglone rogi
 
                                 Text {
-                                    text: "Suma: " + (home.incomeArrays.length)  // Możesz zmienić na konkretną logikę sumowania
+                                    text: "Cash Flows: " + (home.incomeArrays.length)  // Możesz zmienić na konkretną logikę sumowania
                                     anchors.right: parent.right
                                     anchors.verticalCenter: parent.verticalCenter
                                     anchors.rightMargin: 10  // Odstęp od prawej krawędzi
