@@ -1,5 +1,11 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>HomeElement.qml</file>
+        <file>RevenuesAndExpensesElement.qml</file>
+        <file>RetirementElement.qml</file>
+        <file>FinancialGoals.qml</file>
+        <file>ForecastElement.qml</file>
+        <file>FinancialProgramsElement.qml</file>
     </qresource>
 </RCC>
