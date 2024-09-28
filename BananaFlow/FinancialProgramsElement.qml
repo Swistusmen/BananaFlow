@@ -5,19 +5,4 @@ import QtQuick.Dialogs 1.3
 
 Item {
 
-    ColumnLayout {
-        anchors.fill: parent
-
-        Rectangle {
-            color: "lightgray"
-            border.color: "gray"
-            border.width: 1
-            //Layout.fillWidth: true
-            Layout.fillHeight: true
-            Layout.width: 50
-            Layout.margins: 10
-        }
-
-
-    }
 }

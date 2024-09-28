@@ -11,9 +11,11 @@ Item {
         anchors.centerIn: parent
         color: "purple"
 
-        property var incomeArrays: ["Element 1", "Element 2", "Element 3"]
         property var expenseArray: ["Element 1", "Element 2", "Element 3"]
         property int incomeFieldsMargin: 5
+        property double allIncomes: 0
+        property double allExpenses: 0
+        property double cashFlows: 0
         ColumnLayout {
             anchors.centerIn: parent
             anchors.fill: parent
@@ -28,10 +30,13 @@ Item {
                     Button {
                         text: qsTr("Add Income")
                         onClicked: {
-                            var newElement = "Nowy element " + (home.incomeArrays.length + 1)
-                            home.incomeArrays.push(newElement)
-                            console.log(home.incomeArrays)
-                            listView.model = home.incomeArrays
+                            listView.model.append({
+                                                      "name": "",
+                                                      "amount": "",
+                                                      "tax": "",
+                                                      "netto": "",
+                                                      "checked": false
+                                                  })
                         }
                     }
 
@@ -39,9 +44,31 @@ Item {
                         text: qsTr("Remove Income")
                         enabled: home.incomeArrays.length > 0
                         onClicked: {
-                            home.incomeArrays.pop()
-                            console.log(home.incomeArrays)
-                            listView.model = home.incomeArrays
+                            var itemsToRemove = []
+
+                            for (var i = 0; i < listView.model.count; i++) {
+                                if (listView.model.get(i).checked) {
+                                    itemsToRemove.push(i)
+                                }
+                            }
+
+                            for (var j = itemsToRemove.length - 1; j >= 0; j--) {
+                                listView.model.remove(itemsToRemove[j])
+                            }
+
+                            var total = 0
+
+                            for (var i = 0; i < listView.model.count; i++) {
+                                var nettoValue = Number(
+                                            listView.model.get(i).netto)
+                                if (!isNaN(nettoValue)) {
+                                    total += nettoValue
+                                }
+                            }
+
+                            sumOfAllIncomes.text = "Sum of incomes: " + total
+                            home.allIncomes = total
+                            monthlyCashFlows.text = "Cash flow: " + home.cashFlows
                         }
                     }
                 }
@@ -52,7 +79,22 @@ Item {
                     height: 150
                     clip: true
 
-                    model: home.incomeArrays
+                    model: ListModel {
+                        ListElement {
+                            name: ""
+                            amount: ""
+                            tax: ""
+                            netto: ""
+                            checked: false
+                        }
+                        ListElement {
+                            name: ""
+                            amount: ""
+                            tax: ""
+                            netto: ""
+                            checked: false
+                        }
+                    }
 
                     delegate: Item {
                         width: listView.width
@@ -66,9 +108,13 @@ Item {
                             RowLayout {
                                 anchors.fill: parent
 
-                                CheckBox {}
+                                CheckBox {
+                                    checked: model.checked
+                                    onCheckedChanged: {
+                                        model.checked = checked
+                                    }
+                                }
 
-                                // Cztery pary nazw i pól tekstowych
                                 RowLayout {
                                     spacing: home.incomeFieldsMargin
 
@@ -77,7 +123,8 @@ Item {
                                         verticalAlignment: Text.AlignVCenter
                                     }
                                     TextField {
-                                        placeholderText: ""
+                                        text: model.name
+                                        onTextChanged: model.name = text
                                     }
                                 }
 
@@ -89,8 +136,12 @@ Item {
                                         verticalAlignment: Text.AlignVCenter
                                     }
                                     TextField {
-                                        placeholderText: ""
+
                                         width: 30
+                                        text: model.amount
+                                        onTextChanged: {
+                                            model.amount = text
+                                        }
                                     }
                                 }
 
@@ -102,8 +153,35 @@ Item {
                                         verticalAlignment: Text.AlignVCenter
                                     }
                                     TextField {
-                                        placeholderText: ""
+
                                         width: 30
+                                        text: model.tax
+                                        onTextChanged: {
+                                            model.tax = text
+
+                                            if (text != "") {
+                                                var income = Number(
+                                                            model.amount)
+                                                var tax = Number(model.tax)
+                                                model.netto = income - income * tax / 100
+
+                                                var total = 0
+
+                                                for (var i = 0; i < listView.model.count; i++) {
+                                                    var nettoValue = Number(
+                                                                listView.model.get(
+                                                                    i).netto)
+                                                    if (!isNaN(nettoValue)) {
+                                                        total += nettoValue
+                                                    }
+                                                }
+
+                                                sumOfAllIncomes.text = "Sum of incomes: " + total
+                                                home.allIncomes = total
+                                                monthlyCashFlows.text = "Cash flow: "
+                                                        + home.cashFlows
+                                            }
+                                        }
                                     }
                                 }
 
@@ -115,7 +193,7 @@ Item {
                                         verticalAlignment: Text.AlignVCenter
                                     }
                                     TextField {
-                                        placeholderText: ""
+                                        text: model.netto
                                         width: 30
                                     }
                                 }
@@ -125,23 +203,24 @@ Item {
                 }
 
                 Rectangle {
-                                    width: 200
-                                    height: 50
-                                    color: "lightgray"
-                                    border.color: "black"
-                                    border.width: 1
-                                    anchors.right: parent.right
-                                    radius: 5  // Zaokrąglone rogi
+                    width: 200
+                    height: 50
+                    color: "lightgray"
+                    border.color: "black"
+                    border.width: 1
+                    anchors.right: parent.right
+                    radius: 5 // Zaokrąglone rogi
 
-                                    Text {
-                                        text: "Sum of incomes: " + (home.incomeArrays.length)  // Możesz zmienić na konkretną logikę sumowania
-                                        anchors.right: parent.right
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        anchors.rightMargin: 10  // Odstęp od prawej krawędzi
-                                        horizontalAlignment: Text.AlignRight
-                                        color: "black"
-                                    }
-                                }
+                    Text {
+                        id: sumOfAllIncomes
+                        text: "Sum of incomes: " + (home.incomeArrays.length)
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.rightMargin: 10
+                        horizontalAlignment: Text.AlignRight
+                        color: "black"
+                    }
+                }
 
                 ScrollBar.vertical: ScrollBar {
                     policy: ScrollBar.AlwaysOn
@@ -158,34 +237,69 @@ Item {
                     Button {
                         text: qsTr("Add Expense")
                         onClicked: {
-                            var newElement = "Nowy element " + (home.expenseArray.length + 1)
-                            home.expenseArray.push(newElement)
-                            console.log(home.expenseArray)
-                            expensesListView.model = home.expenseArray
+                            expensesListView.model.append({
+                                                              "name": "",
+                                                              "amount": "",
+                                                              "checked": false
+                                                          })
                         }
                     }
 
                     Button {
-                        text: qsTr("Remove Expense")
-                        enabled: home.expenseArray.length > 0
+                        text: qsTr("Remove expense")
+                        enabled: home.incomeArrays.length > 0
                         onClicked: {
-                            home.expenseArray.pop()
-                            console.log(home.expenseArray)
-                            expensesListView.model = home.expenseArray
+                            var itemsToRemove = []
+
+                            for (var i = 0; i < expensesListView.model.count; i++) {
+                                if (expensesListView.model.get(i).checked) {
+                                    itemsToRemove.push(i)
+                                }
+                            }
+
+                            for (var j = itemsToRemove.length - 1; j >= 0; j--) {
+                                expensesListView.model.remove(itemsToRemove[j])
+                            }
+
+                            var total = 0
+
+                            for (var i = 0; i < expensesListView.model.count; i++) {
+                                var amountValue = Number(
+                                            expensesListView.model.get(
+                                                i).amount)
+                                if (!isNaN(amountValue)) {
+                                    total += amountValue
+                                }
+                            }
+                            sumOfExpenses.text = "Sum of expenses: " + total
+                            home.allExpenses = total
+                            home.cashFlows = home.allIncomes - home.allExpenses
+                            monthlyCashFlows.text = "Cash flow: " + home.cashFlows
                         }
                     }
                 }
 
                 ListView {
                     id: expensesListView
-                    width: 770
+                    width: 570
                     height: 150
                     clip: true
 
-                    model: home.expenseArray
+                    model: ListModel {
+                        ListElement {
+                            name: ""
+                            amount: ""
+                            checked: false
+                        }
+                        ListElement {
+                            name: ""
+                            amount: ""
+                            checked: false
+                        }
+                    }
 
                     delegate: Item {
-                        width: listView.width
+                        width: expensesListView.width
                         height: 40
 
                         Rectangle {
@@ -198,9 +312,13 @@ Item {
                             RowLayout {
                                 anchors.fill: parent
 
-                                CheckBox {}
+                                CheckBox {
+                                    checked: model.checked
+                                    onCheckedChanged: {
+                                        model.checked = checked
+                                    }
+                                }
 
-                                // Cztery pary nazw i pól tekstowych
                                 RowLayout {
                                     spacing: home.incomeFieldsMargin
 
@@ -209,7 +327,8 @@ Item {
                                         verticalAlignment: Text.AlignVCenter
                                     }
                                     TextField {
-                                        placeholderText: ""
+                                        text: model.name
+                                        onTextChanged: model.name = text
                                     }
                                 }
 
@@ -221,7 +340,25 @@ Item {
                                         verticalAlignment: Text.AlignVCenter
                                     }
                                     TextField {
-                                        placeholderText: ""
+                                        text: model.amount
+                                        onTextChanged: {
+                                            model.amount = text
+
+                                            var total = 0
+
+                                            for (var i = 0; i < expensesListView.model.count; i++) {
+                                                var amountValue = Number(
+                                                            expensesListView.model.get(
+                                                                i).amount)
+                                                if (!isNaN(amountValue)) {
+                                                    total += amountValue
+                                                }
+                                            }
+                                            sumOfExpenses.text = "Sum of expenses: " + total
+                                            home.allExpenses = total
+                                            home.cashFlows = home.allIncomes - home.allExpenses
+                                            monthlyCashFlows.text = "Cash flow: " + home.cashFlows
+                                        }
                                         width: 30
                                     }
                                 }
@@ -235,46 +372,48 @@ Item {
                 }
             }
 
-            RowLayout{
+            RowLayout {
                 anchors.right: parent.right
                 anchors.margins: 20
                 anchors.bottom: parent.bottom
 
-            Rectangle {
-                                width: 200
-                                height: 50
-                                color: "lightgray"
-                                border.color: "black"
-                                border.width: 1
-                                radius: 5  // Zaokrąglone rogi
+                Rectangle {
+                    width: 200
+                    height: 50
+                    color: "lightgray"
+                    border.color: "black"
+                    border.width: 1
+                    radius: 5
 
-                                Text {
-                                    text: "Sum of expenses: " + (home.incomeArrays.length)  // Możesz zmienić na konkretną logikę sumowania
-                                    anchors.right: parent.right
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    anchors.rightMargin: 10  // Odstęp od prawej krawędzi
-                                    horizontalAlignment: Text.AlignRight
-                                    color: "black"
-                                }
-                            }
+                    Text {
+                        id: sumOfExpenses
+                        text: "Sum of expenses: "
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.rightMargin: 10
+                        horizontalAlignment: Text.AlignRight
+                        color: "black"
+                    }
+                }
 
-            Rectangle {
-                                width: 200
-                                height: 50
-                                color: "lightgray"
-                                border.color: "black"
-                                border.width: 1
-                                radius: 5  // Zaokrąglone rogi
+                Rectangle {
+                    width: 200
+                    height: 50
+                    color: "lightgray"
+                    border.color: "black"
+                    border.width: 1
+                    radius: 5
 
-                                Text {
-                                    text: "Cash Flows: " + (home.incomeArrays.length)  // Możesz zmienić na konkretną logikę sumowania
-                                    anchors.right: parent.right
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    anchors.rightMargin: 10  // Odstęp od prawej krawędzi
-                                    horizontalAlignment: Text.AlignRight
-                                    color: "black"
-                                }
-                            }
+                    Text {
+                        id: monthlyCashFlows
+                        text: "Cash Flows: " + (home.incomeArrays.length)
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.rightMargin: 10
+                        horizontalAlignment: Text.AlignRight
+                        color: "black"
+                    }
+                }
             }
         }
     }
