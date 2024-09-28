@@ -6,7 +6,7 @@ import "./"
 
 Window {
     width: 1000
-    height: 600
+    height: 800
     visible: true
     title: qsTr("BananaFlow")
     property int backboardMarginsValue: 10

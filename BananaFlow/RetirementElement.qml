@@ -11,12 +11,21 @@ Item {
         anchors.fill: parent
         color: "#f0f0f0"
 
-        property int age:0
+        property int age: 0
         property int ageOfRetirement: 60
         property double baseAmount: 0
-        property double monthlyContribution:0
-        property int lifeExpectancy:0
+        property double monthlyContribution: 0
+        property int lifeExpectancy: 0
+        property var percentages: [1, 1.05, 1.1, 1.15]
+        property var lengths: [0, 0, 0, 0]
+        property var setOfSets: [[], [], [], []]
 
+        Timer {
+            interval: 100 // 100 ms opóźnienia
+            running: true
+            repeat: false
+            onTriggered: chartView.update()
+        }
 
         ColumnLayout {
             anchors.fill: parent
@@ -55,13 +64,13 @@ Item {
                                 text: qsTr("Enter age")
                                 color: "black"
                                 onTextChanged: {
-                                    var parsedAge = parseInt(text);
+                                    var parsedAge = parseInt(text)
 
-                                            if (!isNaN(parsedAge)) {
-                                                home.age=parsedAge
-                                            }
+                                    if (!isNaN(parsedAge)) {
+                                        home.age = parsedAge
+                                    }
                                 }
-                                 Rectangle {
+                                Rectangle {
                                     color: "white"
                                     border.color: "gray"
                                     border.width: 1
@@ -93,13 +102,13 @@ Item {
                                 text: qsTr("Enter capital")
                                 color: "black"
                                 onTextChanged: {
-                                    var parsedCapital = Number(text);
+                                    var parsedCapital = Number(text)
 
-                                            if (!isNaN(parsedCapital)) {
-                                                home.baseAmount = parsedCapital;
-                                            }
+                                    if (!isNaN(parsedCapital)) {
+                                        home.baseAmount = parsedCapital
+                                    }
                                 }
-                                 Rectangle {
+                                Rectangle {
                                     color: "white"
                                     border.color: "black"
                                     border.width: 1
@@ -131,13 +140,13 @@ Item {
                                 text: qsTr("age of retirement")
                                 color: "black"
                                 onTextChanged: {
-                                    var ageOfRetirement = parseInt(text);
+                                    var ageOfRetirement = parseInt(text)
 
-                                            if (!isNaN(ageOfRetirement)) {
-                                                home.ageOfRetirement = ageOfRetirement;
-                                            }
+                                    if (!isNaN(ageOfRetirement)) {
+                                        home.ageOfRetirement = ageOfRetirement
+                                    }
                                 }
-                                 Rectangle {
+                                Rectangle {
                                     color: "white"
                                     border.color: "gray"
                                     border.width: 1
@@ -169,13 +178,13 @@ Item {
                                 text: qsTr("life expectancy (months)")
                                 color: "black"
                                 onTextChanged: {
-                                    var lifeExpectancy = parseInt(text);
+                                    var lifeExpectancy = parseInt(text)
 
-                                            if (!isNaN(lifeExpectancy)) {
-                                                home.lifeExpectancy = lifeExpectancy;
-                                            }
+                                    if (!isNaN(lifeExpectancy)) {
+                                        home.lifeExpectancy = lifeExpectancy
+                                    }
                                 }
-                                 Rectangle {
+                                Rectangle {
                                     color: "white"
                                     border.color: "black"
                                     border.width: 1
@@ -214,14 +223,13 @@ Item {
                                 color: "black"
                                 onTextChanged: {
 
-                                        var parsedMonthlyContribution = Number(text);
+                                    var parsedMonthlyContribution = Number(text)
 
-                                                if (!isNaN(parsedMonthlyContribution)) {
-                                                    home.monthlyContribution = parsedMonthlyContribution;
-                                                }
-
+                                    if (!isNaN(parsedMonthlyContribution)) {
+                                        home.monthlyContribution = parsedMonthlyContribution
+                                    }
                                 }
-                                 Rectangle {
+                                Rectangle {
                                     color: "white"
                                     border.color: "gray"
                                     border.width: 1
@@ -235,10 +243,71 @@ Item {
                         Layout.alignment: Qt.AlignCenter
                         Layout.preferredWidth: parent.width * 0.8
                         onClicked: {
-                            var currentRetirement=home.baseAmount/(home.lifeExpectancy-home.ageOfRetirement*12)
-                            var givenRetirement=(home.baseAmount+(home.ageOfRetirement-home.age)*home.monthlyContribution)/(home.lifeExpectancy-home.ageOfRetirement*12)
-                            targetRetirement.text="Target retirement "+givenRetirement
-                            currentRetirement.text="Current "+currentRetirement
+                            var currentRetirement = home.baseAmount
+                                    / (home.lifeExpectancy - home.ageOfRetirement * 12)
+                            var givenRetirement = (home.baseAmount
+                                                   + (home.ageOfRetirement - home.age)
+                                                   * home.monthlyContribution)
+                                    / (home.lifeExpectancy - home.ageOfRetirement * 12)
+                            targetRetirement.text = "Target retirement " + givenRetirement
+                            currentRetirement.text = "Current " + currentRetirement
+
+                            var length = (home.lifeExpectancy - home.ageOfRetirement * 12)
+                            //var lenghts=[0,0,0,0]
+                            defaultSeries.clear()
+                            firstSet.clear()
+                            secondSet.clear()
+                            thirdSet.clear()
+
+                            for (var i = 0; i < 4; i++) {
+
+                                home.lengths[i] = home.percentages[i] * length
+                            }
+
+                            for (var i = 0; i < 4; i++) {
+                                for (var j = 0; j < 4; j++) {
+                                    home.setOfSets[i][j]
+                                            = (home.baseAmount + (home.ageOfRetirement - home.age)
+                                               * home.monthlyContribution
+                                               * home.percentages[i]) / home.lengths[j]
+                                }
+                            }
+
+
+                            for (var i = 0; i < 4; i++) {
+                                defaultSeries.append(home.lengths[i],
+                                                     home.setOfSets[0][i])
+                            }
+
+                            for (var i = 0; i < 4; i++) {
+
+                                firstSet.append(home.lengths[i],
+                                                home.setOfSets[1][i])
+                            }
+
+                            for (var i = 0; i < 4; i++) {
+                                secondSet.append(home.lengths[i],
+                                                 home.setOfSets[2][i])
+                            }
+
+                            for (var i = 0; i < 4; i++) {
+
+                                thirdSet.append(home.lengths[i],home.setOfSets[3][i])
+                            }
+
+                            axisX.min = home.lengths[0]
+                            axisX.max = home.lengths[3]
+
+                            axisY.min = Math.min(home.setOfSets[0][0],
+                                                 home.setOfSets[1][0],
+                                                 home.setOfSets[2][0],
+                                                 home.setOfSets[3][0])
+                            axisY.max = Math.max(home.setOfSets[0][3],
+                                                 home.setOfSets[1][3],
+                                                 home.setOfSets[2][3],
+                                                 home.setOfSets[3][3])
+
+                            chartView.update()
                         }
                     }
 
@@ -283,55 +352,59 @@ Item {
                 Layout.margins: 10
 
                 ChartView {
-                                    id: chartView
-                                    anchors.fill: parent
+                    id: chartView
+                    anchors.fill: parent
+                    antialiasing: true
 
-                                    LineSeries {
-                                        name: "Zmienna 1"
-                                        XYPoint { x: 0; y: 5 }
-                                        XYPoint { x: 1; y: 10 }
-                                        XYPoint { x: 2; y: 15 }
-                                        XYPoint { x: 3; y: 20 }
-                                        XYPoint { x: 4; y: 25 }
-                                    }
+                    LineSeries {
+                        id: defaultSeries
+                        name: "default"
+                        axisX: axisX
+                        axisY: axisY
+                        useOpenGL: true
+                    }
 
-                                    LineSeries {
-                                        name: "Zmienna 2"
-                                        XYPoint { x: 0; y: 10 }
-                                        XYPoint { x: 1; y: 15 }
-                                        XYPoint { x: 2; y: 20 }
-                                        XYPoint { x: 3; y: 10 }
-                                        XYPoint { x: 4; y: 5 }
-                                    }
+                    LineSeries {
+                        id: firstSet
+                        name: "105%"
+                        axisX: axisX
+                        axisY: axisY
+                        useOpenGL: true
+                    }
 
-                                    LineSeries {
-                                        name: "Zmienna 3"
-                                        XYPoint { x: 0; y: 15 }
-                                        XYPoint { x: 1; y: 5 }
-                                        XYPoint { x: 2; y: 10 }
-                                        XYPoint { x: 3; y: 15 }
-                                        XYPoint { x: 4; y: 20 }
-                                    }
+                    LineSeries {
+                        id: secondSet
+                        name: "110%"
+                        axisX: axisX
+                        axisY: axisY
+                        useOpenGL: true
+                    }
 
-                                    // Osie
-                                    ValueAxis {
-                                        id: axisX
-                                        min: 0
-                                        max: 4
-                                        titleText: "Oś X"
-                                    }
+                    LineSeries {
+                        id: thirdSet
+                        name: "115%"
+                        axisX: axisX
+                        axisY: axisY
+                        useOpenGL: true
+                    }
 
-                                    ValueAxis {
-                                        id: axisY
-                                        min: 0
-                                        max: 30
-                                        titleText: "Oś Y"
-                                    }
+                    ValueAxis {
+                        id: axisX
+                        min: 100
+                        max: 150
 
-                                    // Przypisanie osi do wykresu
-                                    axes: [axisX, axisY]
-                                }
+                        titleText: "Oś X"
+                    }
 
+                    ValueAxis {
+                        id: axisY
+                        min: 1000
+                        max: 3000
+                        titleText: "Oś Y"
+                    }
+
+                    axes: [axisX, axisY]
+                }
             }
         }
     }
