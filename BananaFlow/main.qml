@@ -78,22 +78,20 @@ Window {
     }
 
     Tab{
-        title:qsTr("Forecasts")
+        title:qsTr("Account Manager")
         width: viewTab.tabelementWidth
-        Rectangle{
+        AccountManagerElement{
             id: financialForecasts
             anchors.fill: parent
-            color: "green"
         }
     }
 
     Tab{
-        title:qsTr("Financial programs")
+        title:qsTr("Financial programs for retirement")
         width: viewTab.tabelementWidth
-        Rectangle{
+        FinancialProgramsElement{
             id: financialPrograms
             anchors.fill: parent
-            color: "green"
         }
     }
     }

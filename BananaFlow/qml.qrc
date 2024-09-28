@@ -5,7 +5,7 @@
         <file>RevenuesAndExpensesElement.qml</file>
         <file>RetirementElement.qml</file>
         <file>FinancialGoals.qml</file>
-        <file>ForecastElement.qml</file>
         <file>FinancialProgramsElement.qml</file>
+        <file>AccountManagerElement.qml</file>
     </qresource>
 </RCC>
