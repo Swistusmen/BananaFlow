@@ -157,7 +157,6 @@ Item {
 
                                 CheckBox {}
 
-                                // Cztery pary nazw i pól tekstowych
                                 RowLayout {
                                     spacing: home.incomeFieldsMargin
 
@@ -199,13 +198,13 @@ Item {
                                 border.color: "black"
                                 border.width: 1
                                 anchors.right: parent.right
-                                radius: 5  // Zaokrąglone rogi
+                                radius: 5
 
                                 Text {
-                                    text: "Sum of collected money: " + (home.goalArrays.length)  // Możesz zmienić na konkretną logikę sumowania
+                                    text: "Sum of collected money: " + (home.goalArrays.length)
                                     anchors.right: parent.right
                                     anchors.verticalCenter: parent.verticalCenter
-                                    anchors.rightMargin: 10  // Odstęp od prawej krawędzi
+                                    anchors.rightMargin: 10
                                     horizontalAlignment: Text.AlignRight
                                     color: "black"
                                 }
