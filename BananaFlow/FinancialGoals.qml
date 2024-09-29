@@ -11,8 +11,6 @@ Item {
         anchors.centerIn: parent
         color: "green"
 
-        property var goalArrays: ["Element 1", "Element 2", "Element 3"]
-        property var achievementsArray: ["Element 1", "Element 2", "Element 3"]
         property int incomeFieldsMargin: 5
         ColumnLayout {
             anchors.centerIn: parent
@@ -28,10 +26,13 @@ Item {
                     Button {
                         text: qsTr("Add Goal")
                         onClicked: {
-                            var newElement = "Nowy element " + (home.goalArrays.length + 1)
-                            home.goalArrays.push(newElement)
-                            console.log(home.goalArrays)
-                            listView.model = home.goalArrays
+                            listView.model.append({
+                                                      "name": "",
+                                                      "amount": 0,
+                                                      "time": "",
+                                                      "collected": 0,
+                                                      "checked": false
+                                                  })
                         }
                     }
 
@@ -39,9 +40,63 @@ Item {
                         text: qsTr("Remove Goal")
                         enabled: home.goalArrays.length > 0
                         onClicked: {
-                            home.goalArrays.pop()
-                            console.log(home.goalArrays)
-                            listView.model = home.goalArrays
+                            var itemsToRemove = []
+
+                            for (var i = 0; i < listView.model.count; i++) {
+                                if (listView.model.get(i).checked) {
+                                    itemsToRemove.push(i)
+                                }
+                            }
+
+                            for (var j = itemsToRemove.length - 1; j >= 0; j--) {
+                                listView.model.remove(itemsToRemove[j])
+                            }
+                        }
+                    }
+
+                    Button {
+                        text: qsTr("Complete Goal")
+                        enabled: home.goalArrays.length > 0
+                        onClicked: {
+                            var itemsToRemove = [];
+                            for (var i = 0; i < listView.model.count; i++) {
+                                if (listView.model.get(i).checked) {
+                                    itemsToRemove.push(i)
+                                }
+                            }
+
+
+                            for (var j = 0; j < itemsToRemove.length; j++) {
+                                        var index = itemsToRemove[j];
+                                        var selectedGoal = listView.model.get(index);
+
+                                        // Tworzymy nowy obiekt expenseItem
+                                        var expenseItem = {
+                                            name: selectedGoal.name,
+                                            amount: selectedGoal.amount
+                                        };
+
+                                        // Dodajemy do expensesListView
+                                        expensesListView.model.append(expenseItem);
+                                    }
+
+
+                            for (var j = itemsToRemove.length - 1; j >= 0; j--) {
+                                listView.model.remove(itemsToRemove[j])
+                            }
+
+                            var total = 0
+
+                            for (var i = 0; i < expensesListView.model.count; i++) {
+                                var nettoValue = Number(
+                                            expensesListView.model.get(i).amount)
+                                if (!isNaN(nettoValue)) {
+                                    total += nettoValue
+                                }
+                            }
+
+                            sumOfMoneySpendForDreams.text="Sum of collected money: "+total
+
                         }
                     }
                 }
@@ -52,7 +107,15 @@ Item {
                     height: 150
                     clip: true
 
-                    model: home.goalArrays
+                    model: ListModel {
+                        ListElement {
+                            name: ""
+                            collected: 0
+                            amount: 0
+                            time: ""
+                            checked: false
+                        }
+                    }
 
                     delegate: Item {
                         width: listView.width
@@ -66,9 +129,13 @@ Item {
                             RowLayout {
                                 anchors.fill: parent
 
-                                CheckBox {}
+                                CheckBox {
+                                    checked: model.checked
+                                    onCheckedChanged: {
+                                        model.checked = checked
+                                    }
+                                }
 
-                                // Cztery pary nazw i pól tekstowych
                                 RowLayout {
                                     spacing: home.incomeFieldsMargin
 
@@ -77,6 +144,8 @@ Item {
                                         verticalAlignment: Text.AlignVCenter
                                     }
                                     TextField {
+                                        text: model.name
+                                        onTextChanged: model.name = text
                                         placeholderText: ""
                                     }
                                 }
@@ -89,7 +158,8 @@ Item {
                                         verticalAlignment: Text.AlignVCenter
                                     }
                                     TextField {
-                                        placeholderText: ""
+                                        text: model.amount
+                                        onTextChanged: model.amount = Number(text)
                                         width: 30
                                     }
                                 }
@@ -102,20 +172,23 @@ Item {
                                         verticalAlignment: Text.AlignVCenter
                                     }
                                     TextField {
-                                        placeholderText: ""
+                                        text: model.time
+                                        onTextChanged: model.time = text
                                         width: 30
                                     }
                                 }
 
-                                RowLayout { //TODO:change
+                                RowLayout {
+                                    //TODO:change
                                     spacing: home.incomeFieldsMargin
 
                                     Text {
-                                        text: "Netto:"
+                                        text: "Collected:"
                                         verticalAlignment: Text.AlignVCenter
                                     }
                                     TextField {
-                                        placeholderText: ""
+                                        text: model.collected
+                                        onTextChanged: model.collected = Number(text)
                                         width: 30
                                     }
                                 }
@@ -139,10 +212,15 @@ Item {
                     height: 150
                     clip: true
 
-                    model: home.achievementsArray
+                    model: ListModel{
+                        ListElement{
+                            name: ""
+                            amount: 0
+                        }
+                    }
 
                     delegate: Item {
-                        width: listView.width
+                        width: expensesListView.width
                         height: 40
 
                         Rectangle {
@@ -165,6 +243,8 @@ Item {
                                         verticalAlignment: Text.AlignVCenter
                                     }
                                     TextField {
+                                        text: model.name
+                                        onTextChanged:model.name = text
                                         placeholderText: ""
                                     }
                                 }
@@ -177,7 +257,8 @@ Item {
                                         verticalAlignment: Text.AlignVCenter
                                     }
                                     TextField {
-                                        placeholderText: ""
+                                        text: model.amount
+                                        onTextChanged:model.amount = Number(text)
                                         width: 30
                                     }
                                 }
@@ -192,23 +273,24 @@ Item {
             }
 
             Rectangle {
-                                width: 200
-                                height: 50
-                                color: "lightgray"
-                                border.color: "black"
-                                border.width: 1
-                                anchors.right: parent.right
-                                radius: 5
+                width: 200
+                height: 50
+                color: "lightgray"
+                border.color: "black"
+                border.width: 1
+                anchors.right: parent.right
+                radius: 5
 
-                                Text {
-                                    text: "Sum of collected money: " + (home.goalArrays.length)
-                                    anchors.right: parent.right
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    anchors.rightMargin: 10
-                                    horizontalAlignment: Text.AlignRight
-                                    color: "black"
-                                }
-                            }
+                Text {
+                    id: sumOfMoneySpendForDreams
+                    text: "Sum of collected money: " + (home.goalArrays.length)
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.rightMargin: 10
+                    horizontalAlignment: Text.AlignRight
+                    color: "black"
+                }
+            }
         }
     }
 }
