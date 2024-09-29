@@ -85,14 +85,5 @@ Window {
             anchors.fill: parent
         }
     }
-
-    Tab{
-        title:qsTr("Financial programs for retirement")
-        width: viewTab.tabelementWidth
-        FinancialProgramsElement{
-            id: financialPrograms
-            anchors.fill: parent
-        }
-    }
     }
 }

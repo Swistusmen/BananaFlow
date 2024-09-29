@@ -9,7 +9,7 @@ Item {
         id: home
         anchors.fill: parent
         anchors.centerIn: parent
-        color: "green"
+        color: "#f0f0f0"
 
         property int incomeFieldsMargin: 5
         ColumnLayout {

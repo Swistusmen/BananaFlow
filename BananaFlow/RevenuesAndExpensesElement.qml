@@ -9,7 +9,7 @@ Item {
         id: home
         anchors.fill: parent
         anchors.centerIn: parent
-        color: "purple"
+        color: "#f0f0f0"
 
         property var expenseArray: ["Element 1", "Element 2", "Element 3"]
         property int incomeFieldsMargin: 5

@@ -9,10 +9,8 @@ Item {
         id: home
         anchors.fill: parent
         anchors.centerIn: parent
-        color: "blue"
+        color: "#f0f0f0"
 
-        property var goalArrays: ["Element 1", "Element 2", "Element 3"]
-        property var achievementsArray: ["Element 1", "Element 2", "Element 3"]
         property int incomeFieldsMargin: 5
         ColumnLayout {
             anchors.centerIn: parent
@@ -28,10 +26,13 @@ Item {
                     Button {
                         text: qsTr("Add Account")
                         onClicked: {
-                            var newElement = "Nowy element " + (home.goalArrays.length + 1)
-                            home.goalArrays.push(newElement)
-                            console.log(home.goalArrays)
-                            listView.model = home.goalArrays
+                            listView.model.append({
+                                                      "name": "",
+                                                      "amount": 0,
+                                                      "interestRate": 0,
+                                                      "time": 0,
+                                                      "checked": false
+                                                  })
                         }
                     }
 
@@ -39,9 +40,17 @@ Item {
                         text: qsTr("Remove Account")
                         enabled: home.goalArrays.length > 0
                         onClicked: {
-                            home.goalArrays.pop()
-                            console.log(home.goalArrays)
-                            listView.model = home.goalArrays
+                            var itemsToRemove = []
+
+                            for (var i = 0; i < listView.model.count; i++) {
+                                if (listView.model.get(i).checked) {
+                                    itemsToRemove.push(i)
+                                }
+                            }
+
+                            for (var j = itemsToRemove.length - 1; j >= 0; j--) {
+                                listView.model.remove(itemsToRemove[j])
+                            }
                         }
                     }
                 }
@@ -52,7 +61,14 @@ Item {
                     height: 150
                     clip: true
 
-                    model: home.goalArrays
+                    model: ListModel {
+                        ListElement {
+                            checked: false
+                            amount: 0
+                            interestRate: 0
+                            time: 0
+                        }
+                    }
 
                     delegate: Item {
                         width: listView.width
@@ -66,9 +82,13 @@ Item {
                             RowLayout {
                                 anchors.fill: parent
 
-                                CheckBox {}
+                                CheckBox {
+                                    checked: model.checked
+                                    onCheckedChanged: {
+                                        model.checked = checked
+                                    }
+                                }
 
-                                // Cztery pary nazw i pól tekstowych
                                 RowLayout {
                                     spacing: home.incomeFieldsMargin
 
@@ -89,7 +109,8 @@ Item {
                                         verticalAlignment: Text.AlignVCenter
                                     }
                                     TextField {
-                                        placeholderText: ""
+                                        text: model.amount
+                                        onTextChanged: model.amount = text
                                         width: 30
                                     }
                                 }
@@ -102,12 +123,13 @@ Item {
                                         verticalAlignment: Text.AlignVCenter
                                     }
                                     TextField {
-                                        placeholderText: ""
+                                        text: model.time
+                                        onTextChanged: model.time = text
                                         width: 30
                                     }
                                 }
 
-                                RowLayout { //TODO:change
+                                RowLayout {
                                     spacing: home.incomeFieldsMargin
 
                                     Text {
@@ -115,7 +137,8 @@ Item {
                                         verticalAlignment: Text.AlignVCenter
                                     }
                                     TextField {
-                                        placeholderText: ""
+                                        text: model.interestRate
+                                        onTextChanged: model.interestRate = text
                                         width: 30
                                     }
                                 }
