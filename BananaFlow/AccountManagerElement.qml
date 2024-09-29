@@ -12,9 +12,12 @@ Item {
         color: "#f0f0f0"
 
         property int incomeFieldsMargin: 5
+        property real totalEarnings: 0
+
         ColumnLayout {
             anchors.centerIn: parent
             anchors.fill: parent
+
             ColumnLayout {
                 anchors.left: parent.left
                 anchors.top: parent.top
@@ -57,8 +60,8 @@ Item {
 
                 ListView {
                     id: listView
-                    width: 950
-                    height: 150
+                    width: 1000  // Zwiększ szerokość listy
+                    height: 300  // Zwiększ wysokość listy
                     clip: true
 
                     model: ListModel {
@@ -149,6 +152,44 @@ Item {
 
                 ScrollBar.vertical: ScrollBar {
                     policy: ScrollBar.AlwaysOn
+                }
+            }
+
+            // Dodanie przycisku "Calculate"
+            Button {
+                text: qsTr("Calculate")
+                width: 150
+                anchors.horizontalCenter: parent.horizontalCenter
+                onClicked: {
+                    var total = 0;
+                    for (var i = 0; i < listView.model.count; i++) {
+                        var amount = parseFloat(listView.model.get(i).amount);
+                        var time = parseFloat(listView.model.get(i).time);
+                        var interestRate = parseFloat(listView.model.get(i).interestRate);
+
+                        // Obliczanie zysku z jednego elementu
+                        var profit = amount * time / 12 * interestRate*0.01 * 0.81;
+                        total += profit;
+                    }
+                    home.totalEarnings = total;  // Zapisz wynik
+                }
+            }
+
+            // Prostokąt z tekstem na dole
+            Rectangle {
+                width: 1000  // Dopasuj szerokość do listy
+                height: 50
+                color: "#e0e0e0"
+                border.color: "black"
+                border.width: 2
+                radius: 5
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                Text {
+                    text: "Money earned (after tax): $" + home.totalEarnings.toFixed(2)
+                    anchors.centerIn: parent
+                    font.pixelSize: 20
+                    color: "black"
                 }
             }
         }
